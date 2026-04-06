@@ -15,6 +15,7 @@ interface User {
   template: `
     <div class="demo-container">
       <h2>Backend Service Demo</h2>
+      <p class="subtitle">Using Signals for reactive state management</p>
       
       <div class="actions">
         <button (click)="getUsers()">Get Users</button>
@@ -23,12 +24,15 @@ interface User {
         <button (click)="deleteUser()">Delete User</button>
       </div>
       
-      @if (loading()) {
+      @if (backendService.loading()) {
         <div class="loading">Loading...</div>
       }
       
-      @if (error()) {
-        <div class="error">{{ error() }}</div>
+      @if (backendService.error()) {
+        <div class="error">
+          {{ backendService.error() }}
+          <button (click)="backendService.clearError()">✕</button>
+        </div>
       }
       
       @if (response()) {
@@ -37,6 +41,16 @@ interface User {
           <pre>{{ response() | json }}</pre>
         </div>
       }
+      
+      <div class="info">
+        <h3>Features:</h3>
+        <ul>
+          <li>✅ Global loading state with Signal</li>
+          <li>✅ Global error state with Signal</li>
+          <li>✅ Automatic loading/error management</li>
+          <li>✅ Type-safe API calls</li>
+        </ul>
+      </div>
     </div>
   `,
   styles: [`
@@ -44,6 +58,11 @@ interface User {
       padding: 2rem;
       max-width: 800px;
       margin: 0 auto;
+    }
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 2rem;
     }
     
     .actions {
@@ -66,7 +85,7 @@ interface User {
       background: #0056b3;
     }
     
-    .loading, .error, .response {
+    .loading, .error, .response, .info {
       padding: 1rem;
       margin: 1rem 0;
       border-radius: 4px;
@@ -75,16 +94,41 @@ interface User {
     .loading {
       background: #e3f2fd;
       color: #1976d2;
+      font-weight: 500;
     }
     
     .error {
       background: #ffebee;
       color: #c62828;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .error button {
+      background: transparent;
+      color: #c62828;
+      padding: 0.25rem 0.5rem;
+      font-size: 1.2rem;
     }
     
     .response {
       background: #f5f5f5;
       border: 1px solid #ddd;
+    }
+    
+    .info {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+    }
+    
+    .info ul {
+      margin: 0.5rem 0 0;
+      padding-left: 1.5rem;
+    }
+    
+    .info li {
+      margin: 0.5rem 0;
     }
     
     pre {
@@ -94,31 +138,19 @@ interface User {
   `]
 })
 export class BackendDemoComponent {
-  private backendService = inject(BackendService);
-  
-  loading = signal(false);
-  error = signal('');
+  backendService = inject(BackendService);
   response = signal<any>(null);
 
   getUsers() {
-    this.loading.set(true);
-    this.error.set('');
+    this.response.set(null);
     
     this.backendService.get<User[]>('/users').subscribe({
-      next: (users) => {
-        this.loading.set(false);
-        this.response.set(users);
-      },
-      error: (err) => {
-        this.loading.set(false);
-        this.error.set(err.message || 'Failed to fetch users');
-      }
+      next: (users) => this.response.set(users)
     });
   }
 
   createUser() {
-    this.loading.set(true);
-    this.error.set('');
+    this.response.set(null);
     
     const newUser = {
       name: 'John Doe',
@@ -126,20 +158,12 @@ export class BackendDemoComponent {
     };
     
     this.backendService.post<User>('/users', newUser).subscribe({
-      next: (user) => {
-        this.loading.set(false);
-        this.response.set(user);
-      },
-      error: (err) => {
-        this.loading.set(false);
-        this.error.set(err.message || 'Failed to create user');
-      }
+      next: (user) => this.response.set(user)
     });
   }
 
   updateUser() {
-    this.loading.set(true);
-    this.error.set('');
+    this.response.set(null);
     
     const updatedUser = {
       name: 'Jane Doe',
@@ -147,30 +171,15 @@ export class BackendDemoComponent {
     };
     
     this.backendService.put<User>('/users/1', updatedUser).subscribe({
-      next: (user) => {
-        this.loading.set(false);
-        this.response.set(user);
-      },
-      error: (err) => {
-        this.loading.set(false);
-        this.error.set(err.message || 'Failed to update user');
-      }
+      next: (user) => this.response.set(user)
     });
   }
 
   deleteUser() {
-    this.loading.set(true);
-    this.error.set('');
+    this.response.set(null);
     
     this.backendService.delete<void>('/users/1').subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.response.set({ message: 'User deleted successfully' });
-      },
-      error: (err) => {
-        this.loading.set(false);
-        this.error.set(err.message || 'Failed to delete user');
-      }
+      next: () => this.response.set({ message: 'User deleted successfully' })
     });
   }
 }
