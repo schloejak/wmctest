@@ -8,6 +8,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'demo',
+    loadComponent: () => import('./backend/backend-demo.component').then(m => m.BackendDemoComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'login',
     loadComponent: () => import('./login/login.component').then(m => m.LoginComponent)
   },

@@ -15,7 +15,10 @@ import { CommonModule } from '@angular/common';
           <p>You are logged in as: <strong>{{ username }}</strong></p>
         }
         
-        <button (click)="logout()">Logout</button>
+        <div class="actions">
+          <a href="/demo" class="btn btn-primary">Backend Service Demo</a>
+          <button (click)="logout()" class="btn btn-danger">Logout</button>
+        </div>
       </div>
     </div>
   `,
@@ -45,17 +48,36 @@ import { CommonModule } from '@angular/common';
       color: #666;
     }
     
-    button {
+    .actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
       padding: 0.75rem 2rem;
-      background: #dc3545;
       color: white;
       border: none;
       border-radius: 4px;
       font-size: 1rem;
       cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
     }
     
-    button:hover {
+    .btn-primary {
+      background: #007bff;
+    }
+    
+    .btn-primary:hover {
+      background: #0056b3;
+    }
+    
+    .btn-danger {
+      background: #dc3545;
+    }
+    
+    .btn-danger:hover {
       background: #c82333;
     }
   `]

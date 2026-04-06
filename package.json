@@ -1,8 +1,14 @@
 {
   "name": "@ichgamer999/wmctest",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Minimalist Angular authentication template with signals, JWT token handling, and HTTP interceptors",
-  "keywords": ["angular", "authentication", "jwt", "signals", "template"],
+  "keywords": [
+    "angular",
+    "authentication",
+    "jwt",
+    "signals",
+    "template"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "repository": {

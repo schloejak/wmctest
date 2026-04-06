@@ -15,7 +15,8 @@
     "src/app/auth/**/*",
     "src/app/guards/**/*",
     "src/app/login/**/*",
-    "src/app/home/**/*"
+    "src/app/home/**/*",
+    "src/app/backend/**/*"
   ],
   "exclude": [
     "**/*.spec.ts"
