@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.2] - 2026-04-06
+
+### Added
+- **Signals in BackendService**: Global loading and error state management
+  - `loading` signal - Tracks loading state for all HTTP requests
+  - `error` signal - Stores error messages
+  - `clearError()` method - Manually clear errors
+- Automatic loading/error handling in all HTTP methods
+
+### Changed
+- BackendDemoComponent now uses service signals instead of local state
+- Improved error handling with reactive signals
+
 ## [1.0.1] - 2026-04-06
 
 ### Added
