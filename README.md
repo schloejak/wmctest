@@ -1,59 +1,205 @@
-# Wmctest
+# Angular Authentication Template
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+A minimalist Angular authentication template using modern Angular features including **Signals**, functional guards, and functional HTTP interceptors.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- ✨ **Angular Signals** for reactive state management
+- 🔐 **JWT Token Authentication** with automatic token handling
+- 🛡️ **HTTP Interceptor** for automatic Authorization header injection
+- 🚦 **Route Guards** using functional guards (CanActivateFn)
+- 📦 **Standalone Components** - no modules required
+- 🎨 **Minimal & Clean** - ready to customize
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Installation
 
 ```bash
-ng generate component component-name
+npm install @yourusername/angular-auth-template
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Quick Start
+
+### 1. Configure Your App
+
+In your `app.config.ts`:
+
+```typescript
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from '@yourusername/angular-auth-template';
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([authInterceptor]))
+  ]
+};
+```
+
+### 2. Set Up Routes
+
+In your `app.routes.ts`:
+
+```typescript
+import { Routes } from '@angular/router';
+import { authGuard, LoginComponent, HomeComponent } from '@yourusername/angular-auth-template';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: HomeComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  }
+];
+```
+
+### 3. Initialize Auth Service
+
+In your root component (`app.ts`):
+
+```typescript
+import { Component, inject, OnInit } from '@angular/core';
+import { AuthService } from '@yourusername/angular-auth-template';
+
+@Component({
+  selector: 'app-root',
+  template: '<router-outlet></router-outlet>'
+})
+export class App implements OnInit {
+  private authService = inject(AuthService);
+
+  ngOnInit() {
+    this.authService.initAuth();
+  }
+}
+```
+
+## API
+
+### AuthService
+
+```typescript
+class AuthService {
+  // Observable user signal
+  readonly user: Signal<string>;
+  
+  // Set your API base URL
+  baseUrl: string;
+  
+  // Login method
+  login(username: string, password: string): Observable<{ token: string }>;
+  
+  // Logout method
+  logout(): void;
+  
+  // Check authentication status
+  isLoggedIn(): boolean;
+  
+  // Get stored token
+  getToken(): string | null;
+  
+  // Initialize auth from localStorage
+  initAuth(): void;
+}
+```
+
+### Usage Example
+
+```typescript
+import { Component, inject, signal } from '@angular/core';
+import { AuthService } from '@yourusername/angular-auth-template';
+
+@Component({
+  selector: 'app-profile',
+  template: `
+    <div>
+      <p>Logged in as: {{ authService.user() }}</p>
+      <button (click)="logout()">Logout</button>
+    </div>
+  `
+})
+export class ProfileComponent {
+  authService = inject(AuthService);
+  
+  logout() {
+    this.authService.logout();
+  }
+}
+```
+
+## Configuration
+
+Set your API base URL in the AuthService:
+
+```typescript
+import { AuthService } from '@yourusername/angular-auth-template';
+
+const authService = inject(AuthService);
+authService.baseUrl = 'https://your-api.com/api';
+```
+
+## Expected Backend Response
+
+The login endpoint should return:
+
+```json
+{
+  "token": "your-jwt-token"
+}
+```
+
+## Components Included
+
+- **LoginComponent** - Ready-to-use login form with error handling
+- **HomeComponent** - Example protected home page
+- **authGuard** - Functional route guard
+- **authInterceptor** - Functional HTTP interceptor
+
+## Customization
+
+All components are standalone and can be easily customized. Simply copy the components to your project and modify as needed.
+
+## Development
+
+Run the demo app:
 
 ```bash
-ng generate --help
+npm start
 ```
 
-## Building
-
-To build the project run:
+Build the library:
 
 ```bash
-ng build
+npm run build:lib
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Publishing to npm
 
-## Running unit tests
+1. Update `package.json` with your details:
+   - Change `@yourusername/angular-auth-template` to your package name
+   - Update author, repository URL, etc.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+2. Build the library:
+   ```bash
+   npm run build:lib
+   ```
 
-```bash
-ng test
-```
+3. Login to npm:
+   ```bash
+   npm login
+   ```
 
-## Running end-to-end tests
+4. Publish:
+   ```bash
+   npm publish --access public
+   ```
 
-For end-to-end (e2e) testing, run:
+## License
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT
