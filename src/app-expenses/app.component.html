@@ -1,0 +1,19 @@
+<div class="layout">
+  <div class="sidebar">
+    @if (auth.isAuthenticated()) {
+      <div>{{ auth.getUserName() }}</div>
+    }
+
+    <a href="/expenses">Expenses</a>
+
+    @if (!auth.isAuthenticated()) {
+      <button (click)="login()">Login</button>
+    } @else {
+      <button (click)="logout()">LogOut</button>
+    }
+  </div>
+
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

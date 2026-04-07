@@ -1,0 +1,42 @@
+<h2>My Expenses</h2>
+
+@if (editingExpense(); as expenseToEdit) {
+  <form (ngSubmit)="saveEdit()">
+    <h3>Edit Expense</h3>
+    <div>
+      <label for="type">Type</label>
+      <input id="type" name="type" [(ngModel)]="expenseToEdit.type" />
+    </div>
+    <div>
+      <label for="description">Description</label>
+      <input id="description" name="description" [(ngModel)]="expenseToEdit.description" />
+    </div>
+    <div>
+      <label for="amount">Amount</label>
+      <input id="amount" name="amount" type="number" [(ngModel)]="expenseToEdit.amount" />
+    </div>
+    <div>
+      <label for="expenseDate">Date</label>
+      <input id="expenseDate" name="expenseDate" type="date" [(ngModel)]="expenseToEdit.expenseDate" />
+    </div>
+    <div>
+      <button type="submit">Save</button>
+      <button type="button" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </form>
+}
+
+@for (expense of this.expenses(); track expense.clientId ?? $index) {
+  <div class="expense-row">
+
+
+    <div [style.color]="isFoodType(expense.type)">{{ expense.type }}</div>
+    <div>{{ expense.description }}</div>
+    <div>${{ expense.amount }}</div>
+    <div>{{ expense.expenseDate }}</div>
+    <div>
+      <button type="button" (click)="startEdit(expense)">Edit</button>
+      <button type="button" (click)="deleteExpense(expense)">Delete</button>
+    </div>
+  </div>
+}
