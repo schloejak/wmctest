@@ -1,0 +1,14 @@
+<h1>Connection overview</h1>
+@if (logined()){
+  <button  (click)="logout()">Logout</button>
+} @else {
+  <button (click)="login()">Login</button>
+}
+<div>
+  @for (connection of connections(); track connection) {
+    <h5>Connection {{$index+1}}</h5>
+    <p>{{connection.fromStationName}} ===> {{connection.toStationName}}</p>
+    <a [routerLink]="['/book/', connection.id]">Buchen</a>
+  }
+</div>
+
