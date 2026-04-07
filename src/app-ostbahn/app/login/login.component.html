@@ -1,0 +1,23 @@
+@if (error) {
+  <div class="alert alert-danger container" role="alert">
+    Invalid username/password combination.
+  </div>
+}
+
+<div class="d-flex justify-content-center align-items-center mt-5">
+  <form [formGroup]="loginForm" (ngSubmit)="login()" class="w-auto container p-4 shadow rounded">
+    <div class="form-group mt-3">
+      <label>Name:
+        <input class="form-control" formControlName="name">
+      </label>
+    </div>
+    <div class="form-group mt-3 mx-auto">
+      <label>Password:
+        <input class="form-control" formControlName="password" type="password">
+      </label>
+    </div>
+    <div class="text-center">
+      <button class="btn btn-primary mt-3">Login</button>
+    </div>
+  </form>
+</div>

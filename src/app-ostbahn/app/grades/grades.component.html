@@ -1,0 +1,27 @@
+<form class="container" [formGroup]="gradeForm" (ngSubmit)="grade()">
+  <div class="row mb-3">
+    <div class="col col-md-3">
+      <select class="form-control" id="subjectSelect" formControlName="subject">
+        @for (subject of subjects(); track subject) {
+          <option [value]="subject">{{ subject }}</option>
+        }
+      </select>
+    </div>
+    <div class="col col-md-3">
+      <button type="submit" class="btn btn-primary form-control">Ok</button>
+    </div>
+  </div>
+  <ul class="list-group" formArrayName="grades">
+    @for (item of grades.controls; track item) {
+      <li class="list-group-item">{{ students[$index].name }}
+        <div class="form-group">
+          <select class="form-control" id="gradeSelect" [formControlName]="$index">
+            @for (grade of ['-', 1, 2, 3, 4, 5]; track $index) {
+              <option [value]="grade">{{ grade }}</option>
+            }
+          </select>
+        </div>
+      </li>
+    }
+  </ul>
+</form>

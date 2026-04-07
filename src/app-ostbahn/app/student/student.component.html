@@ -1,0 +1,27 @@
+<p>{{student()?.id}}</p>
+<p>{{student()?.name}}</p>
+@for (grade of student()?.grades; track grade){
+  <p>{{grade.subject}}: {{grade.value}}</p>
+}
+
+@for (warning of student()?.warnings; track warning) {
+  <p>By {{warning.teacher}} at {{warning.time}} in {{warning.subject}}</p>
+}
+<form [formGroup]="detailStudentFormGroup">
+
+  <label>Flag 5</label>
+  <input type="checkbox" formControlName="flag5FormControl">
+
+  <p>Bewertungen: </p>
+  <div formArrayName="studentComments">
+    <button type="button" (click)="addComment()">Add</button>
+    @for (comment of studentComments.controls; track comment) {
+      <div [formControlName]="$index">
+        <input type="text" formControlName="ratingComment">
+      </div>
+    }
+  </div>
+
+</form>
+
+<h2>HTML Uebergabe</h2>

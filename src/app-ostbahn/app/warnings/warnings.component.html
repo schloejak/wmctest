@@ -1,0 +1,43 @@
+<form (ngSubmit)="send()" [formGroup]="warningForm">
+  <select formControlName="subject">
+    @for (subject of subjects(); track subject) {
+      <option [ngValue]="subject">{{ subject.name }}</option>
+    }
+  </select>
+
+  <button type="submit">Ok</button>
+
+  <ul>
+    @for (student of students(); track student){
+      <li>
+        <span class="name">{{student.name}}</span>
+
+        <div class="right">
+          @if (isSelected(student.id)) {
+            <span class="date">
+              {{ now | date:'dd.MM.yyyy HH:mm' }}
+            </span>
+          }
+          <input type="checkbox"
+                 [checked]="isSelected(student.id)"
+                 (change)="toggle(student.id, $event)">
+        </div>
+      </li>
+    }
+  </ul>
+</form>
+
+<div>
+  @for (student of students(); track student){
+    @if (latestWarnings().get(student.id)?.size) {
+      @for (warning of latestWarnings().get(student.id)!.values(); track warning) {
+        <p>
+          Warning for {{student.name}}
+          in {{warning.subject}}
+          at {{warning.time | date:'dd.MM.yyyy HH:mm'}}
+          by {{warning.teacher}}
+        </p>
+      }
+    }
+  }
+</div>

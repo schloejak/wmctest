@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="list-group">
+    @for (student of students(); track student.id) {
+      <a class="list-group-item list-group-item-action"
+         routerLink="/students/{{student.id}}">{{ student.name }}
+        @for (grade of student.grades; track grade) {
+        @if (grade.value === 5){
+          <span>💥</span>
+        }
+      }
+      </a>
+    }
+  </div>
+</div>
